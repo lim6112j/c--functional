@@ -12,7 +12,8 @@ public class Tests
     public void WnenTransferDateIsFuture_ThenValidationPasses()
     {
         // ikmpure test
-        var sut = new DateNotPastValidator(new DefaultDateTimeService());
+        var ddts = new DefaultDateTimeService();
+        var sut = new DateNotPastValidator(ddts);
         var transfer = MakeTransfer.Dummy with
         {
             Date = new DateTime(2025, 3, 12)
@@ -23,7 +24,8 @@ public class Tests
     [Test]
     public void WhenTransferDateIsFuture_ThenValidationPassesWithFakeData()
     {
-        var sut = new DateNotPastValidator(new FakeDateTimeService());
+        var fts = new FakeDateTimeService();
+        var sut = new DateNotPastValidator(fts);
         var transfer = MakeTransfer.Dummy with
         {
             Date = presentDate.AddDays(-1)
