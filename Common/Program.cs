@@ -33,9 +33,10 @@ namespace Common
     {
         public DateTime UtcNow => DateTime.UtcNow;
     }
-    public record DateNotPastValidator(DateTime Today) : IValidator<MakeTransfer>
+    public delegate DateTime Clock();
+    public record DateNotPastValidator(Clock Clock) : IValidator<MakeTransfer>
     {
-        public bool IsValid(MakeTransfer transfer) => Today <= transfer.Date.Date;
+        public bool IsValid(MakeTransfer transfer) => Clock().Date <= transfer.Date.Date;
     }
     public class Common
     {
