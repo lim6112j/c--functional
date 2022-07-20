@@ -3,15 +3,17 @@ namespace CommonTests;
 using Common;
 public class Tests
 {
-    readonly DateTime today = new(2025, 3, 12);
-    [Test]
-    public void TestWithModified()
+    readonly DateTime today = new(2022, 7, 20);
+    [TestCase(+1, ExpectedResult = true)]
+    [TestCase(0, ExpectedResult = true)]
+    [TestCase(-1, ExpectedResult = false)]
+    public bool TestWithModified(int offset)
     {
         var sut = new DateNotPastValidator(() => today);
         var transfer = MakeTransfer.Dummy with
         {
-            Date = today
+            Date = today.AddDays(offset)
         };
-        Assert.That(sut.IsValid(transfer), Is.EqualTo(true));
+        return sut.IsValid(transfer);
     }
 }
