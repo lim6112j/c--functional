@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Text.RegularExpressions;
+using Unit = System.ValueTuple;
 namespace Common
 {
     public abstract record Command(DateTime Timestamp);
@@ -51,7 +52,7 @@ namespace Common
             }
             Value = value;
         }
-        private static bool IsValid(int age) => 0 <= age && age < 120;
+        private static bool IsValid(int age) => age > 0 && age < 120;
         public static bool operator <(Age l, Age r)
             => l.Value < r.Value;
         public static bool operator >(Age l, Age r)
@@ -61,20 +62,27 @@ namespace Common
         public static bool operator >(Age l, int r)
             => l > new Age(r);
     }
+    readonly record struct HealthData
+    {
+        readonly Age age;
+        readonly Gender gender;
+    }
+    public static class ActionExt
+    {
+        public static Func<Unit> ToFunc(this Action action) => () => { action(); return default; };
+        public static Func<T, Unit> ToFunc<T>(this Action<T> action) => (t) => { action(t); return default; };
+    }
     public class Common
     {
 
         static Risk CalculateRiskProfile(Age age, Gender gender)
         {
-            if (age < 0 || age > 120)
-            {
-                throw new ArgumentException($"{age} is not a valid age");
-            }
-            return (age < 60) ? Risk.Low : Risk.High;
+            var threshold = (gender == Gender.Female) ? 62 : 60;
+            return (age < threshold) ? Risk.Low : Risk.High;
         }
         internal static void Main()
         {
-            Risk risk = CalculateRiskProfile(new Age(10), Gender.Male);
+            Risk risk = CalculateRiskProfile(new Age(60), Gender.Female);
             Console.WriteLine("Hello, World! {0}", risk);
 
         }
