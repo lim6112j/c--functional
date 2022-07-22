@@ -1,6 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.Text.RegularExpressions;
 using Unit = System.ValueTuple;
+using LaYumba.Functional;
+using static LaYumba.Functional.F;
+using String = LaYumba.Functional.String;
 namespace Common
 {
     public abstract record Command(DateTime Timestamp);
@@ -74,17 +77,43 @@ namespace Common
     }
     public class Common
     {
-
+        string Greet(Option<string> greetee)
+            => greetee.Match(
+                None: () => "sorry, who??",
+                Some: (name) => $"Hello,  {name}"
+            );
         static Risk CalculateRiskProfile(Age age, Gender gender)
         {
             var threshold = (gender == Gender.Female) ? 62 : 60;
             return (age < threshold) ? Risk.Low : Risk.High;
         }
+        record Person(string FirstName, string LastName);
+        static string AbbreviateName(Person p)
+            => Abbreviate(p.FirstName) + Abbreviate(p.LastName);
+        static string Abbreviate(string s)
+            => s.Substring(0, Math.Min(2, s.Length)).ToLower();
+        static string AppendDomain(string localport)
+            => $"{localport}@manning.com";
+        static Func<Person, string> emailFor =
+            p => AppendDomain(AbbreviateName(p));
+
         internal static void Main()
         {
+            var common = new Common();
+            Console.WriteLine("{0}", common.Greet(Some("Jane")));
             Risk risk = CalculateRiskProfile(new Age(60), Gender.Female);
             Console.WriteLine("Hello, World! {0}", risk);
-
+            Option<string> name = Some("enrico");
+            name
+            .Map(String.ToUpper)
+            .ForEach(Console.WriteLine);
+            IEnumerable<string> names = new[] { "Constance", "Albert" };
+            names
+                .Map(String.ToUpper)
+                .ForEach(Console.WriteLine);
+            var joe = new Person("Joe", "Bloggs");
+            var email = emailFor(joe);
+            Console.WriteLine("email for joe : {0}", email);
         }
     }
 }
