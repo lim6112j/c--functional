@@ -4,6 +4,20 @@ using Unit = System.ValueTuple;
 using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using String = LaYumba.Functional.String;
+using ExtensionMethods;
+
+namespace ExtensionMethods
+{
+    public static class MyExtensions
+    {
+        public static int WordCount(this string str)
+        {
+            return str.Split(new char[] { ' ', '.', '?' },
+                             StringSplitOptions.RemoveEmptyEntries
+            ).Count();
+        }
+    }
+}
 namespace Common
 {
     public abstract record Command(DateTime Timestamp);
@@ -114,6 +128,9 @@ namespace Common
             var joe = new Person("Joe", "Bloggs");
             var email = emailFor(joe);
             Console.WriteLine("email for joe : {0}", email);
+            string s = "Hello Extension methods";
+            Console.WriteLine("extension methods word Count = {0} ", s.WordCount());
+
         }
     }
 }
