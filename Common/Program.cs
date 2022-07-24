@@ -18,15 +18,6 @@ namespace ExtensionMethods
                              StringSplitOptions.RemoveEmptyEntries
             ).Count();
         }
-        public static AccountState Activate(this AccountState original) => original with
-        {
-            Status = AccountStatus.Active
-        };
-        public static AccountState RedFlag(this AccountState original) => original with
-        {
-            Status = AccountStatus.Frozen,
-            AllowedOverdraft = 0m
-        };
     }
 }
 namespace Common
@@ -128,7 +119,11 @@ namespace Common
         AccountStatus Status = AccountStatus.Requested,
         decimal AllowedOverdraft = 0m,
         IEnumerable<Transaction>? TransactionHistory = null
-    );
+    )
+    {
+        public CurrencyCode Currency { get; init; } = Currency;
+    };
+
     public record CurrencyCode(string Value)
     {
         public static implicit operator string(CurrencyCode c) => c.Value;
@@ -141,6 +136,20 @@ namespace Common
         string Description,
         DateTime Date
     );
+    public static class Account
+    {
+        public static AccountState Create(CurrencyCode ccy) => new(ccy);
+        public static AccountState Activate(this AccountState account) => account with { Status = AccountStatus.Active };
+        public static AccountState Add(this AccountState account, Transaction trans) => account with
+        {
+            TransactionHistory = account.TransactionHistory!.Prepend(trans)
+        };
+        public static AccountState RedFlag(this AccountState original) => original with
+        {
+            Status = AccountStatus.Frozen,
+            AllowedOverdraft = 0m
+        };
+    }
     public class Common
     {
         string Greet(Option<string> greetee)
