@@ -5,9 +5,11 @@ using LaYumba.Functional;
 using static LaYumba.Functional.F;
 using String = LaYumba.Functional.String;
 using ExtensionMethods;
+using static System.Console;
 
 namespace ExtensionMethods
 {
+    using Common;
     public static class MyExtensions
     {
         public static int WordCount(this string str)
@@ -16,6 +18,15 @@ namespace ExtensionMethods
                              StringSplitOptions.RemoveEmptyEntries
             ).Count();
         }
+        public static AccountState Activate(this AccountState original) => original with
+        {
+            Status = AccountStatus.Active
+        };
+        public static AccountState RedFlag(this AccountState original) => original with
+        {
+            Status = AccountStatus.Frozen,
+            AllowedOverdraft = 0m
+        };
     }
 }
 namespace Common
@@ -89,6 +100,47 @@ namespace Common
         public static Func<Unit> ToFunc(this Action action) => () => { action(); return default; };
         public static Func<T, Unit> ToFunc<T>(this Action<T> action) => (t) => { action(t); return default; };
     }
+    public record PhoneNumber
+    {
+        public NumberType Type { get; }
+        public CountryCode Country { get; }
+        public Number Nr { get; }
+        public enum NumberType { Mobile, Home, Office }
+        public struct Number {/*....*/}
+        public static Func<NumberType, CountryCode, Number, PhoneNumber> Create = (type, country, number) => new(type, country, number);
+        PhoneNumber(NumberType type, CountryCode country, Number number)
+        {
+            Type = type;
+            Country = country;
+            Nr = number;
+        }
+    }
+    public class CountryCode {/*...*/}
+
+    // immutable state
+    public enum AccountStatus
+    {
+        Requested, Active, Frozen, Dormant, Closed
+    }
+    public record AccountState
+    (
+        CurrencyCode Currency,
+        AccountStatus Status = AccountStatus.Requested,
+        decimal AllowedOverdraft = 0m,
+        IEnumerable<Transaction>? TransactionHistory = null
+    );
+    public record CurrencyCode(string Value)
+    {
+        public static implicit operator string(CurrencyCode c) => c.Value;
+        public static implicit operator CurrencyCode(string currencyStr) => new(currencyStr);
+    };
+
+    public record Transaction
+    (
+        decimal Amount,
+        string Description,
+        DateTime Date
+    );
     public class Common
     {
         string Greet(Option<string> greetee)
@@ -130,7 +182,44 @@ namespace Common
             Console.WriteLine("email for joe : {0}", email);
             string s = "Hello Extension methods";
             Console.WriteLine("extension methods word Count = {0} ", s.WordCount());
+            WriteLine("Enter first append");
+            var s1 = ReadLine();
+            WriteLine("Enter first append");
+            var s2 = ReadLine();
+            var result = from a in Int.Parse(s1)
+                         from b in Int.Parse(s2)
+                         select a + b;
+            WriteLine(result.Match(
+                          None: () => "Please enter 2 valid integers",
+                          Some: (r) => $"{s1} + {s2} = {r}"
+                      ));
+            var result2 = Some(new Func<int, int, int>((a, b) => a + b))
+                .Apply(Int.Parse(s1))
+                .Apply(Int.Parse(s2));
 
+            WriteLine(result2.Match(
+                          None: () => "Please enter 2 valid integers",
+                          Some: (r) => $"{s1} + {s2} = {r}"
+                      ));
+            var result3 = Int.Parse(s1)
+                .Bind(a => Int.Parse(s2).Map(b => a + b));
+
+            WriteLine(result2.Match(
+                          None: () => "Please enter 2 valid integers",
+                          Some: (r) => $"{s1} + {s2} = {r}"
+                      ));
+            var original = new AccountState(Currency: "EUR");
+            var activated = original.Activate();
+            WriteLine("Original Status : {0}", original.Status);
+            WriteLine("Original Currency : {0}", original.Currency);
+            WriteLine("Activated Status : {0}", activated.Status);
+            WriteLine("Activated Currency : {0}", activated.Currency);
+
+            var redflag = original.RedFlag();
+
+            WriteLine("Redflag Status : {0}", redflag.Status);
+            WriteLine("Redflag Currency : {0}", redflag.Currency);
         }
+
     }
 }
