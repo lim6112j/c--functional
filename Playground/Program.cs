@@ -27,12 +27,19 @@ namespace Playground
         }
         /// <summary> string builder implementation </summary>
         public static StringBuilder AppendWhen(this StringBuilder sb, string value, bool predicate) => predicate ? sb.Append(value) : sb;
+
     }
 
     public class Playground
     {
-        static bool dividedBy3(int num) {
+        private static bool dividedBy3(int num) {
             return num % 3 == 0;
+        }
+        private static IEnumerable<int> GreaterThan(int[] a, int v)
+        {
+            foreach(int n in a) {
+                if (n > v) yield return n;
+            }
         }
         public static void Main()
         {
@@ -61,6 +68,13 @@ namespace Playground
                 .Append(">Click me</Button>")
                 .ToString();
             Console.WriteLine("added AppendWhen to StringBuilder : " + htmlButton);
+
+            // yield IEnumerable
+            int [] a = { 1,2,3,4,5 };
+            foreach(int n in GreaterThan(a, 3)) {
+                Console.WriteLine("{1,2,3,4,5} greater than 3 : " + n);
+            }
         }
+
     }
 }
