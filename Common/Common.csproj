@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\functional-csharp-code-2\LaYumba.Functional\LaYumba.Functional.csproj" />
     <ProjectReference Include="..\functional-csharp-code\LaYumba.Functional\LaYumba.Functional.csproj" />
   </ItemGroup>
 
