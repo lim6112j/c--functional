@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using static System.Console;
+using static System.Linq.Enumerable;
 // See https://aka.ms/new-console-template for more information
 namespace Playground
 {
@@ -39,6 +41,22 @@ namespace Playground
         }
         /// <summary> swapargs </summary>
         public static Func<T2, T1, R> SwapArgs<T1, T2, R>(this Func<T1, T2, R> f) => (x, y) => f(y, x);
+    }
+    static class StringExt
+    {
+        public static string ToSentenceCase(this string s) // pure function
+            => s == string.Empty
+            ? string.Empty
+            : char.ToUpperInvariant(s[0]) + s.ToLower()[1..];
+    }
+    class ListFormatter {
+        int counter;
+        string PrependCounter(string s) => $"{++counter}. {s}"; // impure
+        public List<string> Format(List<string> list)
+            => list
+            .Select(StringExt.ToSentenceCase) // pure
+            .Select(PrependCounter) //impure
+            .ToList();
     }
     public class Playground
     {
@@ -96,6 +114,28 @@ namespace Playground
             Func<int, int, int> divideBy = (x, y) => x / y;
             var divideBySwapped = divideBy.SwapArgs();
             Console.WriteLine("swapArgs func : x/y to y/x ,5/10 to  10/5 : " + divideBySwapped(5, 10));
+
+
+            // function factories
+            Func<int, bool> isMod(int n) => i => i % n == 0;
+            Console.WriteLine(" function fatories : ");
+            Range(1, 20)
+                .Where(isMod(7))
+                .ToList()
+                .ForEach(WriteLine);
+
+
+            // side effects
+            // avoiding state mutation
+            var shoppingList = new List<string>{
+                "coffee beans",
+                "BANANAS",
+                "Dates"
+            };
+            WriteLine("avoiding state mutation");
+            new ListFormatter()
+                .Format(shoppingList)
+                .ForEach(WriteLine);
         }
 
     }
