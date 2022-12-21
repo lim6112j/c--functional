@@ -58,6 +58,17 @@ namespace Playground
             .Select(PrependCounter) //impure
             .ToList();
     }
+    class ListFormatterParallel {
+        int counter;
+        string PrependCounter(string s) => $"{++counter}. {s}";
+        public List<string> Format(List<string> list)
+            => list
+            .AsParallel()
+            .Select(StringExt.ToSentenceCase)
+            .Select(PrependCounter)
+            .ToList();
+
+    }
     public class Playground
     {
         private static Func<int, bool> dividedBy(int num)
@@ -123,8 +134,6 @@ namespace Playground
                 .Where(isMod(7))
                 .ToList()
                 .ForEach(WriteLine);
-
-
             // side effects
             // avoiding state mutation
             var shoppingList = new List<string>{
@@ -134,6 +143,12 @@ namespace Playground
             };
             WriteLine("avoiding state mutation");
             new ListFormatter()
+                .Format(shoppingList)
+                .ForEach(WriteLine);
+            // pure function parallels well
+
+            WriteLine("avoiding state mutation: impure function applied in parallel");
+            new ListFormatterParallel()
                 .Format(shoppingList)
                 .ForEach(WriteLine);
         }
