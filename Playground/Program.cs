@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using static System.Console;
 using static System.Linq.Enumerable;
+using P = System.Linq.ParallelEnumerable;
 // See https://aka.ms/new-console-template for more information
 namespace Playground
 {
@@ -74,7 +75,7 @@ namespace Playground
             => list
             .AsParallel()
             .Select(StringExt.ToSentenceCase)
-            .Zip(Range(1, list.Count).AsParallel(), (s, i) => $"{i}. {s}")
+            .Zip(P.Range(1, list.Count), (s, i) => $"{i}. {s}")
             .ToList();
     }
     public class Playground
