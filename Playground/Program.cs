@@ -69,6 +69,14 @@ namespace Playground
             .ToList();
 
     }
+    static class ListFormatterStatic {
+        public static List<string> Format(List<string> list)
+            => list
+            .AsParallel()
+            .Select(StringExt.ToSentenceCase)
+            .Zip(Range(1, list.Count).AsParallel(), (s, i) => $"{i}. {s}")
+            .ToList();
+    }
     public class Playground
     {
         private static Func<int, bool> dividedBy(int num)
@@ -141,16 +149,32 @@ namespace Playground
                 "BANANAS",
                 "Dates"
             };
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             WriteLine("avoiding state mutation");
             new ListFormatter()
                 .Format(shoppingList)
                 .ForEach(WriteLine);
-            // pure function parallels well
 
+            watch.Stop();
+            WriteLine("elapsed time : " + watch.ElapsedMilliseconds);
+            // pure function parallels well
+            watch.Reset();
+            watch.Start();
             WriteLine("avoiding state mutation: impure function applied in parallel");
             new ListFormatterParallel()
                 .Format(shoppingList)
                 .ForEach(WriteLine);
+            watch.Stop();
+            WriteLine("elapsed time : " + watch.ElapsedMilliseconds);
+            // avoid using shared state
+            watch.Reset();
+            watch.Start();
+            WriteLine("avoiding state mutation: avoidng shared state");
+            ListFormatterStatic
+                .Format(shoppingList)
+                .ForEach(WriteLine);
+            watch.Stop();
+            WriteLine("elapsed time : " + watch.ElapsedMilliseconds);
         }
 
     }
