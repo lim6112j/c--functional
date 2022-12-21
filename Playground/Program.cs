@@ -27,9 +27,14 @@ namespace Playground
         }
         /// <summary> string builder implementation </summary>
         public static StringBuilder AppendWhen(this StringBuilder sb, string value, bool predicate) => predicate ? sb.Append(value) : sb;
-
+        /// <summary> generic Where custom function </summary>
+        public static IEnumerable<T> WhereCustom<T>(this IEnumerable<T> ts, Func<T, bool> predicate) {
+            foreach(T t in ts) {
+                if(predicate(t))
+                    yield return t;
+            }
+        }
     }
-
     public class Playground
     {
         private static bool dividedBy3(int num) {
@@ -45,7 +50,7 @@ namespace Playground
         {
             List<int> list = new List<int>{1,2,3, 4,5,6};
             Func<int, bool> pred = dividedBy3;
-            Console.WriteLine("Linq count : " + Hof.Count(list, pred));
+            Console.WriteLine("Linq count : " + list.Count(pred));
 
             Func<int, int> square = x => x*x;
             Func<int, int> negate = x => x * -1;
@@ -70,9 +75,12 @@ namespace Playground
             Console.WriteLine("added AppendWhen to StringBuilder : " + htmlButton);
 
             // yield IEnumerable
-            int [] a = { 1,2,3,4,5 };
+            int [] a = { 1,2,3,4,5,6,7,8,9 };
             foreach(int n in GreaterThan(a, 3)) {
                 Console.WriteLine("{1,2,3,4,5} greater than 3 : " + n);
+            }
+            foreach(int n in a.WhereCustom(x => x % 3 == 0)) {
+                Console.WriteLine("HOF Where function : " + n);
             }
         }
 
