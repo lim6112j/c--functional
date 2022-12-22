@@ -2,6 +2,12 @@ namespace PlaygroundTests;
 using Playground;
 public class Tests
 {
+    static DateTime presentDate = new DateTime(2023, 3, 12);
+    /// <summary> pure and fake DateTime service  </summary>
+    private class FakeDateTimeService : IDateTimeService
+        {
+            public DateTime UtcNow => presentDate;
+        }
     [SetUp]
     public void Setup()
     {
@@ -10,12 +16,14 @@ public class Tests
     [Test]
     public void Test1()
     {
-        var sut = new DateNotPastValidator();
+
+        var svc = new  FakeDateTimeService();
+        var sut = new DateNotPastValidator(svc);
         var transfer = MakeTransfer.Dummy with
         {
-            Date = new DateTime(2023, 3, 12)
+            Date = presentDate.AddDays(-1)
         };
         var actual = sut.IsValid(transfer);
-        Assert.AreEqual(true, actual);
+        Assert.AreEqual(false, actual);
     }
 }
