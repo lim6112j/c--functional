@@ -138,6 +138,7 @@ namespace Playground
                 .ForEach(WriteLine);
             watch.Stop();
             WriteLine("elapsed time : " + watch.ElapsedMilliseconds);
+            IsolatingIO.Print();
         }
 
     }
