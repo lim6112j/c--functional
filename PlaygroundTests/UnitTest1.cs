@@ -10,7 +10,12 @@ public class Tests
     [Test]
     public void Test1()
     {
-        Assert.Pass();
-
+        var sut = new DateNotPastValidator();
+        var transfer = MakeTransfer.Dummy with
+        {
+            Date = new DateTime(2023, 3, 12)
+        };
+        var actual = sut.IsValid(transfer);
+        Assert.AreEqual(true, actual);
     }
 }

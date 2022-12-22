@@ -16,7 +16,7 @@ namespace Playground
             DateTime Timestamp = default
         ) : Command(Timestamp)
     {
-        internal static MakeTransfer Dummy
+        public static MakeTransfer Dummy
             => new(default, default, default, default, default, default, default);
     }
     public interface IValidator<T>
