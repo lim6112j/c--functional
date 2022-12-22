@@ -37,6 +37,11 @@ namespace Playground
         static readonly Regex regex = new Regex("^[A-Z]{6}[A-Z1-9]{5}$");
         public bool IsValid(MakeTransfer transfer) => regex.IsMatch(transfer.Bic);
     }
+    // avoiding trivial constructor
+    public record DateNotPastValidatorStruct(IDateTimeService DateService) : IValidator<MakeTransfer> {
+        private IDateTimeService DataService {get;}  = DateService;
+        public bool IsValid(MakeTransfer request) => DataService.UtcNow.Date <= request.Date.Date;
+    }
     public class DateNotPastValidator : IValidator<MakeTransfer>
     {
         private readonly IDateTimeService  dateService;
