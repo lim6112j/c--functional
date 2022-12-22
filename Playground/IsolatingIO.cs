@@ -54,10 +54,20 @@ namespace Playground
     public record DateNotPastValidatorValue(DateTime Today) : IValidator<MakeTransfer>{
         public bool IsValid(MakeTransfer transfer) => Today <= transfer.Date.Date;
     }
+    public record DateNotPastValidatorFunc(Func<DateTime> Clock) {
+        public bool IsValid(MakeTransfer transfer) => Clock().Date <= transfer.Date.Date;
+    }
+    public delegate DateTime Clock();
+    public record DateNotPastValidatorDelegate(Clock Clock):IValidator<MakeTransfer> {
+        public bool IsValid(MakeTransfer transfer) => Clock().Date <= transfer.Date.Date;
+    }
     public class IsolatingIO
     {
         public void ConfigureSerrvices(IServiceCollection services) {
+            services.AddTransient<Clock>(_ => () => DateTime.UtcNow);
+            services.AddTransient<DateNotPastValidatorDelegate>();
             services.AddTransient<DateNotPastValidatorValue> (_ => new DateNotPastValidatorValue(DateTime.UtcNow.Date));
+
         }
         public static void Print()
         {
