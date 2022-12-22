@@ -1,5 +1,6 @@
 using static System.Console;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.DependencyInjection;
 namespace Playground
 {
     // OO design
@@ -50,8 +51,14 @@ namespace Playground
         }
         public bool IsValid(MakeTransfer transfer) => (dateService.UtcNow.Date <= transfer.Date.Date);
     }
-    public static class IsolatingIO
+    public record DateNotPastValidatorValue(DateTime Today) : IValidator<MakeTransfer>{
+        public bool IsValid(MakeTransfer transfer) => Today <= transfer.Date.Date;
+    }
+    public class IsolatingIO
     {
+        public void ConfigureSerrvices(IServiceCollection services) {
+            services.AddTransient<DateNotPastValidatorValue> (_ => new DateNotPastValidatorValue(DateTime.UtcNow.Date));
+        }
         public static void Print()
         {
             WriteLine("hello");
