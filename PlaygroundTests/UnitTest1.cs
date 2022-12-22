@@ -45,11 +45,12 @@ public class Tests
     [TestCase(+0, ExpectedResult = true)]
     [TestCase(-1, ExpectedResult = false)]
     public bool WhenTransferDateIsPast_ThenValidatorFails(int offset)
+    {
+        var sut = new DateNotPastValidatorDelegate(() => presentDate);
+        var transfer = MakeTransfer.Dummy with
         {
-            var sut = new DateNotPastValidatorDelegate(()  => presentDate);
-            var transfer = MakeTransfer.Dummy with {
-                Date = presentDate.AddDays(offset)
-            };
-            return sut.IsValid(transfer);
-        }
+            Date = presentDate.AddDays(offset)
+        };
+        return sut.IsValid(transfer);
+    }
 }

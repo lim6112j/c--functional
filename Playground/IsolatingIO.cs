@@ -30,43 +30,49 @@ namespace Playground
         DateTime UtcNow { get; }
     }
     public class DefaultDateTimeService : IDateTimeService
-        {
-            public DateTime UtcNow => DateTime.UtcNow;
-        }
+    {
+        public DateTime UtcNow => DateTime.UtcNow;
+    }
     public class BicFormatValidator : IValidator<MakeTransfer>
     {
         static readonly Regex regex = new Regex("^[A-Z]{6}[A-Z1-9]{5}$");
         public bool IsValid(MakeTransfer transfer) => regex.IsMatch(transfer.Bic);
     }
     // avoiding trivial constructor
-    public record DateNotPastValidatorStruct(IDateTimeService DateService) : IValidator<MakeTransfer> {
-        private IDateTimeService DataService {get;}  = DateService;
+    public record DateNotPastValidatorStruct(IDateTimeService DateService) : IValidator<MakeTransfer>
+    {
+        private IDateTimeService DataService { get; } = DateService;
         public bool IsValid(MakeTransfer request) => DataService.UtcNow.Date <= request.Date.Date;
     }
     public class DateNotPastValidator : IValidator<MakeTransfer>
     {
-        private readonly IDateTimeService  dateService;
-        public DateNotPastValidator(IDateTimeService dateService) {
+        private readonly IDateTimeService dateService;
+        public DateNotPastValidator(IDateTimeService dateService)
+        {
             this.dateService = dateService;
         }
         public bool IsValid(MakeTransfer transfer) => (dateService.UtcNow.Date <= transfer.Date.Date);
     }
-    public record DateNotPastValidatorValue(DateTime Today) : IValidator<MakeTransfer>{
+    public record DateNotPastValidatorValue(DateTime Today) : IValidator<MakeTransfer>
+    {
         public bool IsValid(MakeTransfer transfer) => Today <= transfer.Date.Date;
     }
-    public record DateNotPastValidatorFunc(Func<DateTime> Clock) {
+    public record DateNotPastValidatorFunc(Func<DateTime> Clock)
+    {
         public bool IsValid(MakeTransfer transfer) => Clock().Date <= transfer.Date.Date;
     }
     public delegate DateTime Clock();
-    public record DateNotPastValidatorDelegate(Clock Clock):IValidator<MakeTransfer> {
+    public record DateNotPastValidatorDelegate(Clock Clock) : IValidator<MakeTransfer>
+    {
         public bool IsValid(MakeTransfer transfer) => Clock().Date <= transfer.Date.Date;
     }
     public class IsolatingIO
     {
-        public void ConfigureSerrvices(IServiceCollection services) {
+        public void ConfigureSerrvices(IServiceCollection services)
+        {
             services.AddTransient<Clock>(_ => () => DateTime.UtcNow);
             services.AddTransient<DateNotPastValidatorDelegate>();
-            services.AddTransient<DateNotPastValidatorValue> (_ => new DateNotPastValidatorValue(DateTime.UtcNow.Date));
+            services.AddTransient<DateNotPastValidatorValue>(_ => new DateNotPastValidatorValue(DateTime.UtcNow.Date));
 
         }
         public static void Print()
