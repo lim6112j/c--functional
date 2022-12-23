@@ -1,11 +1,11 @@
-﻿public struct NoneType { }
-public abstract record Option<T>
+﻿struct NoneType { }
+abstract record Option<T>
 {
     public static implicit operator Option<T>(NoneType _) => new None<T>();
 }
-public record None<T> : Option<T>;
-public record Some<T>(T value) : Option<T>;
-public static class OptionExt
+record None<T> : Option<T>;
+record Some<T>(T value) : Option<T>;
+static class OptionExt
 {
     public static R Match<T, R>(this Option<T> opt, Func<R> None, Func<T, R> Some) => opt switch
     {
@@ -14,14 +14,14 @@ public static class OptionExt
         _ => throw new ArgumentException("option must be none or some")
     };
 }
-public class OptionMake
+class OptionMake
 {
-    public static readonly NoneType None = default;
-    public static string Greet(Option<string> greetee) => greetee.Match
-    (
-        None: () => "sorry, wwho?",
-        Some: (name) => $"hello, {name}"
-    );
+    static readonly NoneType None = default;
+    static string Greet(Option<string> greetee) => greetee.Match
+   (
+       None: () => "sorry, wwho?",
+       Some: (name) => $"hello, {name}"
+   );
     public static void Main()
     {
         var greet = Greet(None);
