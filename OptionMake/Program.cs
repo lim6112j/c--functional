@@ -1,8 +1,8 @@
-﻿Console.WriteLine("Hello, World!");
-var greet = OptionMake.Greet(new None<string>());
-Console.WriteLine(greet);
-/// type Option t = None | Some t
-public interface Option<T> { }
+﻿public struct NoneType { }
+public abstract record Option<T>
+{
+    public static implicit operator Option<T>(NoneType _) => new None<T>();
+}
 public record None<T> : Option<T>;
 public record Some<T>(T value) : Option<T>;
 public static class OptionExt
@@ -16,10 +16,15 @@ public static class OptionExt
 }
 public class OptionMake
 {
+    public static readonly NoneType None = default;
     public static string Greet(Option<string> greetee) => greetee.Match
     (
         None: () => "sorry, wwho?",
         Some: (name) => $"hello, {name}"
     );
+    public static void Main()
+    {
+        var greet = Greet(None);
+        Console.WriteLine(greet);
+    }
 }
-
