@@ -1,7 +1,10 @@
-﻿struct NoneType { }
+﻿using System.Collections.Specialized;
+
+struct NoneType { }
 abstract record Option<T>
 {
     public static implicit operator Option<T>(NoneType _) => new None<T>();
+    public static implicit operator Option<T>(T value) => value == null ? new None<T>() : new Some<T>(value);
 }
 record None<T> : Option<T>;
 record Some<T> : Option<T> {
@@ -35,5 +38,10 @@ class OptionMake
         Console.WriteLine(greet);
         var greet2 = Greet(Some("John"));
         Console.WriteLine(greet2);
+        Console.WriteLine(Greet(None));
+        Console.WriteLine(Greet("John"));
+        var empty = new NameValueCollection();
+        Option<string> green = empty["green"];
+        Console.WriteLine(Greet(green));
     }
 }
