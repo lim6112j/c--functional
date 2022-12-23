@@ -1,7 +1,15 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //
+using Unit = System.ValueTuple;
 using System.Diagnostics;
 Console.WriteLine("hello");
+public static class ActionExt
+{
+    /// <summary> Actions to Unit-returning  Func </summary>
+    public static Func<Unit> ToFunc(this Action action) => () => { action(); return default; };
+    /// <summary> Actions to Unit-returning  Func
+    public static Func<T, Unit> ToFunc<T>(this Action<T> action) => (t) => { action(t); return default; };
+}
 public static class Instrumentation
 {
     public static T Time<T>(string op, Func<T> f)
@@ -14,11 +22,5 @@ public static class Instrumentation
         return t;
     }
     public static void Time(string op, Action act)
-    {
-        var sw = new Stopwatch();
-        sw.Start();
-        act();
-        sw.Stop();
-        Console.WriteLine($"{op} took {sw.ElapsedMilliseconds}ms");
-    }
+        => Time<Unit>(op, act.ToFunc());
 }
