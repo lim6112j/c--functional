@@ -36,10 +36,10 @@ public struct Age
     public static Option<Age> Create(int age) => IsValid(new Age(age).Value) ? Some(new Age(age)) : None;
     private Age(int value) => Value = value;
     private static bool IsValid(int age) => 0 <= age && age < 120;
-    private Action voidFunc(Func<Unit> f)
-    {
-        return () => f();
-    }
+    public static void Print(string sp, Option<Age> age) => age.Match<Func<Unit>>(
+        None: () => { WriteLine(sp + "invalid"); return default; },
+        Some: (value) => { WriteLine(sp + value.Value); return default; }
+        );
 }
 public class Partial
 {
@@ -63,7 +63,8 @@ public class Partial
                       None: () => "who?",
                       Some: (value) => value
                   ));
-        WriteLine("Age smart constructor : " + Create(130));
+        Print("Age smart constructor : ", Create(130));
+        Print("Age smart constructor : ", Create(100));
     }
 
 }
