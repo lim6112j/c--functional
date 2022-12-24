@@ -1,23 +1,30 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //
+namespace ModelingUnit;
 using Unit = System.ValueTuple;
 using static System.Console;
 using System.Diagnostics;
 using System.Collections.Specialized;
-
-try
+public class ModelingUnit
 {
-    var empty = new NameValueCollection();
-    var green = empty["green"];
-    WriteLine("green!");
+    public static void Main()
+    {
 
-    var alsoEmpty = new Dictionary<string, string>();
-    var blue = alsoEmpty["blue"];
-    WriteLine("blue!");
-}
-catch (Exception ex)
-{
-    WriteLine(ex.GetType().Name);
+        try
+        {
+            var empty = new NameValueCollection();
+            var green = empty["green"];
+            WriteLine("green!");
+
+            var alsoEmpty = new Dictionary<string, string>();
+            var blue = alsoEmpty["blue"];
+            WriteLine("blue!");
+        }
+        catch (Exception ex)
+        {
+            WriteLine(ex.GetType().Name);
+        }
+    }
 }
 public static class ActionExt
 {
