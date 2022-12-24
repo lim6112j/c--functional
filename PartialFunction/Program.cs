@@ -3,11 +3,22 @@ using LaYumba.Functional;
 using System.Collections.Specialized;
 using static LaYumba.Functional.F;
 using static System.Console;
+using static Age;
 /// <summary> partial to total function with option</summary>
 public static class Int {
     public static Option<int> Parse(string s) => int.TryParse(s, out int result) ? Some(result) : None;
 }
+public struct Age {
+    private int Value {get;}
+    public static Option<Age> Create(int age) => IsValid(new Age(age).Value) ? Some(new Age(age)) : None;
+    private Age(int value) => Value = value;
+    private static bool IsValid(int age) => 0 <= age && age < 120;
+    internal static void Print(Option<Age> age) => age.Match(
+        () => WriteLine("None"),
+        (value) => WriteLine(value.Value)
+    );
 
+}
 public class Partial {
     /// lookup : (NameValueCollection, string) -> Option<string>
     public static Option<string?> Lookup(NameValueCollection col, string key) => col[key] == null ? None: Some(col[key]);
@@ -24,5 +35,9 @@ public class Partial {
         WriteLine(Lookup(col, "blue"));
         var dict = new Dictionary<string, string>().Lookup("green");
         WriteLine("dictionary value : null => " + dict);
+        // age smart constructor
+        WriteLine("Age smart constructor : " + Create(130));
+        Print(Create(110));
     }
+
 }
