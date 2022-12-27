@@ -1,45 +1,9 @@
 ﻿using System.Text;
 using static System.Console;
 using static System.Linq.Enumerable;
-using P = System.Linq.ParallelEnumerable;
 // See https://aka.ms/new-console-template for more information
 namespace Playground
 {
-    static class StringExt
-    {
-        public static string ToSentenceCase(this string s) // pure function
-            => s == string.Empty
-            ? string.Empty
-            : char.ToUpperInvariant(s[0]) + s.ToLower()[1..];
-    }
-    class ListFormatter {
-        int counter;
-        string PrependCounter(string s) => $"{++counter}. {s}"; // impure
-        public List<string> Format(List<string> list)
-            => list
-            .Select(StringExt.ToSentenceCase) // pure
-            .Select(PrependCounter) //impure
-            .ToList();
-    }
-    class ListFormatterParallel {
-        int counter;
-        string PrependCounter(string s) => $"{++counter}. {s}";
-        public List<string> Format(List<string> list)
-            => list
-            .AsParallel()
-            .Select(StringExt.ToSentenceCase)
-            .Select(PrependCounter)
-            .ToList();
-
-    }
-    static class ListFormatterStatic {
-        public static List<string> Format(List<string> list)
-            => list
-            .AsParallel()
-            .Select(StringExt.ToSentenceCase)
-            .Zip(P.Range(1, list.Count), (s, i) => $"{i}. {s}")
-            .ToList();
-    }
     public class Playground
     {
         private static Func<int, bool> dividedBy(int num)
