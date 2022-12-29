@@ -20,5 +20,9 @@ public class Ch8
         Console.WriteLine("calculation Calc(3, 0)" + Calc(3,0).ToString());
         Console.WriteLine("calculation Calc(-3, 3)" + Calc(-3,3).ToString());
         Console.WriteLine("calculation Calc(-3, -3)" + Calc(-3,-3).ToString());
+
+        var result = either.Map(x => x * 2);
+        Console.WriteLine("either map , x = 10, fn: x -> x * 2 => " + result);
+        var result2 = either.Map(x => x - 9).Bind( (int x) => new Either<string, int>(x)).ForEach(Console.WriteLine);
     }
 }
