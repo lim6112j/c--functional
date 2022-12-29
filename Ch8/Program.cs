@@ -1,8 +1,12 @@
 ﻿namespace Ch8;
 using static System.Math;
+using Unit = System.ValueTuple;
 public class Ch8
 {
     record Candidate ( int age );
+    record Reason {}
+    record Ingredients{}
+    record Food {}
 
     // Either<L, R> = Left(L) | Right(R)
     public static void Main()
@@ -35,6 +39,25 @@ public class Ch8
             .Where(IsEligible)
             .Bind(TechTest)
             .Bind(Interview);
-        Candidate candidate = new(28);
+
+        Func<Either<Reason, Unit>> WakeupEarly = () => { Console.WriteLine("woke up early"); return default;};
+        Func<Either<Reason, Ingredients>> ShopForIngredients = () => new Either<Reason, Ingredients>(new Ingredients());
+        Func<Ingredients, Either<Reason, Food>> CookRecipe = ingredient => new Either<Reason, Food>(new Food());
+        Action<Food> EnjoyTogether = (food) => Console.WriteLine("enjoy food"); 
+        Action<Reason> ComplainAbout = (reason) => Console.WriteLine("complaining");
+        Action OrderPizza = () => Console.WriteLine("Ordered Pizza");
+        WakeupEarly()
+          .Bind(_ => ShopForIngredients())
+          .Bind(CookRecipe)
+          .Match<Unit>
+          (
+           Right: dish => {EnjoyTogether(dish); return default;},
+           Left: reason =>
+           {
+              ComplainAbout(reason);
+              OrderPizza();
+              return default;
+           }
+           );
     }
 }
