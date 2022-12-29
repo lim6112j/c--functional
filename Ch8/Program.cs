@@ -41,8 +41,8 @@ public class Ch8
             .Bind(Interview);
 
         Func<Either<Reason, Unit>> WakeupEarly = () => { Console.WriteLine("woke up early"); return default;};
-        Func<Either<Reason, Ingredients>> ShopForIngredients = () => new Either<Reason, Ingredients>(new Ingredients());
-        Func<Ingredients, Either<Reason, Food>> CookRecipe = ingredient => new Either<Reason, Food>(new Food());
+        Func<Either<Reason, Ingredients>> ShopForIngredients = () => new Either.Right<Ingredients>(new Ingredients());
+        Func<Ingredients, Either<Reason, Food>> CookRecipe = ingredient => new Either.Right<Food>(new Food());
         Action<Food> EnjoyTogether = (food) => Console.WriteLine("enjoy food"); 
         Action<Reason> ComplainAbout = (reason) => Console.WriteLine("complaining");
         Action OrderPizza = () => Console.WriteLine("Ordered Pizza");
