@@ -2,6 +2,8 @@
 using static System.Math;
 public class Ch8
 {
+    record Candidate ( int age );
+
     // Either<L, R> = Left(L) | Right(R)
     public static void Main()
     {
@@ -16,13 +18,23 @@ public class Ch8
         var either = new Either<string, int>(10);
         Console.WriteLine("either right value : " + either.ToString());
         Console.WriteLine("Hello, World!" + right.ToString());
-        
-        Console.WriteLine("calculation Calc(3, 0)" + Calc(3,0).ToString());
-        Console.WriteLine("calculation Calc(-3, 3)" + Calc(-3,3).ToString());
-        Console.WriteLine("calculation Calc(-3, -3)" + Calc(-3,-3).ToString());
+
+        Console.WriteLine("calculation Calc(3, 0)" + Calc(3, 0).ToString());
+        Console.WriteLine("calculation Calc(-3, 3)" + Calc(-3, 3).ToString());
+        Console.WriteLine("calculation Calc(-3, -3)" + Calc(-3, -3).ToString());
 
         var result = either.Map(x => x * 2);
         Console.WriteLine("either map , x = 10, fn: x -> x * 2 => " + result);
-        var result2 = either.Map(x => x - 9).Bind( (int x) => new Either<string, int>(x)).ForEach(Console.WriteLine);
+        var result2 = either.Map(x => x - 9).Bind((int x) => new Either<string, int>(x)).ForEach(Console.WriteLine);
+
+        Func<Candidate, bool> IsEligible;
+        Func<Candidate, Option<Candidate>> TechTest;
+        Func<Candidate, Option<Candidate>> Interview;
+        Option<Candidate> Recruit(Candidate c)
+          => new Some<Candidate>(c)
+            .Where(IsEligible)
+            .Bind(TechTest)
+            .Bind(Interview);
+        Candidate candidate = new(28);
     }
 }
