@@ -1,13 +1,24 @@
-﻿// See https://aka.ms/new-console-template for more information
-namespace Ch8;
-using LaYumba.Functional;
-using static LaYumba.Functional.F;
+﻿namespace Ch8;
+using static System.Math;
 public class Ch8
 {
     // Either<L, R> = Left(L) | Right(R)
     public static void Main()
     {
-        var right = Right(12);
-        Console.WriteLine("Hello, World!"  + right);
+        Either<string, double> Calc(double x, double y)
+        {
+            if (y == 0) return "y cannot be 0";
+            if (x != 0 && Sign(x) != Sign(y))
+                return "x / y can not be negative";
+            return Sqrt(x / y);
+        }
+        var right = new Either.Right<int>(12);
+        var either = new Either<string, int>(10);
+        Console.WriteLine("either right value : " + either.ToString());
+        Console.WriteLine("Hello, World!" + right.ToString());
+        
+        Console.WriteLine("calculation Calc(3, 0)" + Calc(3,0).ToString());
+        Console.WriteLine("calculation Calc(-3, 3)" + Calc(-3,3).ToString());
+        Console.WriteLine("calculation Calc(-3, -3)" + Calc(-3,-3).ToString());
     }
 }
