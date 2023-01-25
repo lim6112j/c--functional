@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelingUnit", "ModelingUni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatternInFunctional", "PatternInFunctional\PatternInFunctional.csproj", "{3F26D52C-60B1-44B4-91A6-DFCE54E62EA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Curry", "Curry\Curry.csproj", "{92B314E5-55E0-4C0E-B244-F7CEDFCD5373}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{3F26D52C-60B1-44B4-91A6-DFCE54E62EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F26D52C-60B1-44B4-91A6-DFCE54E62EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F26D52C-60B1-44B4-91A6-DFCE54E62EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92B314E5-55E0-4C0E-B244-F7CEDFCD5373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92B314E5-55E0-4C0E-B244-F7CEDFCD5373}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92B314E5-55E0-4C0E-B244-F7CEDFCD5373}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92B314E5-55E0-4C0E-B244-F7CEDFCD5373}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
