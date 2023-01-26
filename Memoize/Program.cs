@@ -7,16 +7,27 @@ public class program {
     Func<int, int>? fib = null;
     fib = n => n > 1 ? fib!(n-1) + fib(n-2) : n;
     var sw = Stopwatch.StartNew();
-    for (int i=0; i<10000;i++)
-      fib(10);
+    Repeater.RepeatRecur(10000, 10, fib);
     Console.WriteLine(sw.ElapsedTicks);
     fib = fib.Memoize();
     sw = Stopwatch.StartNew();
-    for (int i=0; i<10000;i++)
-      fib(10);
+    Repeater.RepeatRecur(10000, 10, fib);
     Console.WriteLine(sw.ElapsedTicks);
     Console.WriteLine(fib(10));
   }
+}
+public static class Repeater {
+  public static void Repeat<T,R>(int n, T m, Func<T, R> f) {
+    for(int i = 0; i < n; i++)
+      f(m);
+  }
+  public static void RepeatRecur<T,R>(int n, T m, Func<T, R> f) {
+    Func<R> g = () => f(m);;
+    Func<int, R, int>? go = null;
+    go = (i, j) => i > n ? i : (go!(i+1, g()));
+    go(0, g());
+  }
+
 }
 public static class Memoizer
 {
