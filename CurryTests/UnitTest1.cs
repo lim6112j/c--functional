@@ -1,15 +1,15 @@
-namespace CurryTests;
+using Curry;
 
+namespace CurryTests;
 public class Tests
 {
     [SetUp]
     public void Setup()
     {
     }
-
     [Test]
-    public void Test1()
-    {
-        Assert.Pass();
+    public void CurryTests() {
+      var curriedFunc = Extension.greet.CurryFunc();
+      Assert.AreEqual(curriedFunc("hello")("ciel"), "hello, ciel");
     }
 }
