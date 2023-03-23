@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurryTests", "CurryTests\Cu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicInterface", "BasicInterface\BasicInterface.csproj", "{918E6FD3-2702-48E8-9C91-A41BC96263D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqExample", "LinqExample\LinqExample.csproj", "{4AEF7347-C3EB-4BF2-9CEB-7AFAE53950FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +80,9 @@ Global
 		{918E6FD3-2702-48E8-9C91-A41BC96263D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{918E6FD3-2702-48E8-9C91-A41BC96263D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{918E6FD3-2702-48E8-9C91-A41BC96263D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AEF7347-C3EB-4BF2-9CEB-7AFAE53950FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AEF7347-C3EB-4BF2-9CEB-7AFAE53950FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AEF7347-C3EB-4BF2-9CEB-7AFAE53950FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AEF7347-C3EB-4BF2-9CEB-7AFAE53950FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
