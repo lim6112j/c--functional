@@ -1,8 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Newtonsoft.Json.Linq;
-using System.Net.Http;
-using System.Text.Encodings.Web;
-using System.Linq;
 
 namespace LinqExample;
 
@@ -25,7 +22,10 @@ public class Program
                             //Console.WriteLine("data ------------ {0}", dataObj["carts"]);
                             var output = from d in dataObj["carts"]
                               where d["total"]!.Value<Int32>() > 4000
-                              select d;
+                              where d["userId"]!.Value<Int32>() == 15
+                              from dd in d["products"]!
+                              where dd["price"]!.Value<Int32>() > 100 
+                              select dd;
                             foreach(var i in output) {
                               Console.WriteLine(i);
                             }
